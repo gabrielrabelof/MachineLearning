@@ -36,4 +36,4 @@ print(previsoes)
 from sklearn.metrics import accuracy_score
 
 taxa_de_acerto = accuracy_score(test_y, previsoes)
-print("Taxa de acerto: ", taxa_de_acerto * 100)
+print("Taxa de acerto: %.2f " % (taxa_de_acerto * 100))
