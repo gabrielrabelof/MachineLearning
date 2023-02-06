@@ -5,16 +5,19 @@ datas = pd.read_csv(uri)
 
 x = datas[["home", "how_it_works", "contact"]]
 y = datas["bought"]
+# print(datas.shape)
 
-train_x = x[:75]
-train_y = y[:75]
-test_x = x[75:]
-test_y = y[75:]
-
-print(f"Treinaremos com {len(train_x)} elementos e testaremos com {len(test_x)} elementos")
-
+from sklearn.model_selection import train_test_split
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score
+
+SEED = 20
+
+train_x, test_x, train_y, test_y = train_test_split(x, y,
+random_state = SEED, test_size = 0.25,
+stratify = y)
+
+print(f"Treinaremos com {len(train_x)} elementos e testaremos com {len(test_x)} elementos")
 
 model = LinearSVC()
 model.fit(train_x, train_y)
