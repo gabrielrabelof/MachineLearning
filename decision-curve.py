@@ -70,5 +70,3 @@ import matplotlib.pyplot as plt
 plt.contourf(xx, yy, Z, alpha = 0.3) # contour = contorno alpha = transparente
 plt.scatter(data_x, data_y, c = test_y, s = 1) # scatter = espalhar 
 plt.show() # c = cor / s = size
-
-# DECISION BOUNDARY = ?
