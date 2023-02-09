@@ -20,7 +20,7 @@ datas = datas.drop(columns = ["Unnamed: 0", "mileage_per_year", "model_year"])
 import numpy as np
 from sklearn. preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 
 x = datas[["price", "model_age", "kilometers_per_year"]]
@@ -32,16 +32,11 @@ np.random.seed(SEED)
 raw_train_x, raw_test_x, train_y, test_y = train_test_split(x, y, test_size = 0.25,
 stratify = y)
 
-scaler = StandardScaler()
-scaler.fit(raw_train_x)
-train_x = scaler.transform(raw_train_x) 
-test_x = scaler.transform(raw_test_x) 
+print(f"Treinaremos com {len(raw_train_x)} elementos e testaremos com {len(raw_test_x)} elementos")
 
-print(f"Treinaremos com {len(train_x)} elementos e testaremos com {len(test_x)} elementos")
-
-model = SVC(gamma = 'auto')
-model.fit(train_x, train_y) 
-predict = model.predict(test_x) 
+model = DecisionTreeClassifier(max_depth = 3)
+model.fit(raw_train_x, train_y) 
+predict = model.predict(raw_test_x) 
 
 accuracy = accuracy_score(test_y, predict) * 100
 print("A acurácia foi de %.2f%%" % accuracy)
@@ -50,14 +45,26 @@ print("A acurácia foi de %.2f%%" % accuracy)
 from sklearn.dummy import DummyClassifier
 
 dummy_stratified = DummyClassifier()
-dummy_stratified.fit(train_x, train_y)
-accuracy = dummy_stratified.score(test_x, test_y) * 100
+dummy_stratified.fit(raw_train_x, train_y)
+accuracy = dummy_stratified.score(raw_test_x, test_y) * 100
 
 print("A acuracia do dummy stratified foi de: %.2f%%" % accuracy)
 
 # criando baseline com dummy mostfrequent
 dummy_mostfrequent = DummyClassifier()
-dummy_mostfrequent.fit(train_x, train_y)
-accuracy = dummy_mostfrequent.score(test_x, test_y) * 100
+dummy_mostfrequent.fit(raw_train_x, train_y)
+accuracy = dummy_mostfrequent.score(raw_test_x, test_y) * 100
 
 print("A acuracia do dummy mostfrequent foi de: %.2f%%" % accuracy)
+
+# gerando o gráfico da árvore de decisão
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+features = x.columns
+fig, axes = plt.subplots(nrows = 1,ncols = 1,figsize = (4,4), dpi=300)
+tree.plot_tree(model,
+filled = True, rounded = True,
+feature_names = features,
+class_names = ["não", "sim"])
+plt.show()
